@@ -20,13 +20,10 @@ func PrintImageOnDynamicPage(imgPath string, pageDim geo.Dim, pdfPath string) er
 
 	img.ScaleToHeight(pageDim.H)
 	pageDim.W = img.Width()
-
-	c.SetPageMargins(0, 0, 0, 0) // we're not printing, so margin needed
+	img.SetPos(0, 0) //top left 	c.SetPageMargins(0, 0, 0, 0) // we're not printing, so margin needed
 	c.SetPageSize(creator.PageSize{pageDim.W, pageDim.H})
 	c.NewPage()
-
 	c.Draw(img)
-
 	c.WriteToFile(pdfPath)
 
 	return nil
@@ -35,9 +32,6 @@ func PrintImageOnDynamicPage(imgPath string, pageDim geo.Dim, pdfPath string) er
 func PrintImageOnStaticPage(imgPath string, pageDim geo.Dim, pdfPath string) error {
 
 	c := creator.New()
-	c.SetPageMargins(0, 0, 0, 0) // we're not printing, so margin needed
-	c.SetPageSize(creator.PageSize{pageDim.W, pageDim.H})
-	c.NewPage()
 
 	img, err := c.NewImageFromFile(imgPath)
 	if err != nil {
@@ -59,8 +53,12 @@ func PrintImageOnStaticPage(imgPath string, pageDim geo.Dim, pdfPath string) err
 		img.ScaleToHeight(pageDim.H)
 	}
 
-	c.Draw(img)
+	img.SetPos(0, 0) //top left
 
+	c.SetPageMargins(0, 0, 0, 0) // we're not printing, so margin needed
+	c.SetPageSize(creator.PageSize{pageDim.W, pageDim.H})
+	c.NewPage()
+	c.Draw(img)
 	c.WriteToFile(pdfPath)
 
 	return nil
